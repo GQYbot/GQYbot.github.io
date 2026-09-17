@@ -428,6 +428,9 @@ function whenVisible(el, play) {
   const texts = new Map();
   Object.values(logs).flat().forEach((li) => texts.set(li, li.textContent));
 
+  // 两边的对话一开始就是完整的；切到哪一边，只把那一边重新打一遍
+  Object.values(logs).flat().forEach((li) => li.classList.add('shown'));
+
   async function typeLog(mode) {
     const items = logs[mode];
     items.forEach((li) => { li.textContent = ''; li.classList.remove('shown', 'typing'); });
