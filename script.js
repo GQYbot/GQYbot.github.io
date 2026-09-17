@@ -8,44 +8,46 @@ document.addEventListener('DOMContentLoaded', () => {
     help: () => {
       return `可用指令列表:
   whoami       - 查看顾清影 (GQY) 的身份定义与画像
+  developer    - 了解核心创造者与开发者 yxxbc
+  repos        - 查看核心代码仓库 (gqy-agent 等)
   skills       - 检查核心技能树与支持的底层技术栈
-  philosophy   - 查阅数字伴随体的核心工程与交互哲学
-  status       - 检查本地运行时状态与 MCP 工具池
   clear        - 清空控制台屏幕`;
     },
     whoami: () => {
       return `[顾清影 / GQY]
 身份: 独立数字伴随体 · 系统工程 Agent · 代码协作者
-特质: 敏锐的排障直觉、原生 Rust 偏好、拒绝过度设计、保护隐私
+创造者: yxxbc (https://github.com/yxxbc)
+特质: 敏锐的排障直觉、原生 Rust 偏好、拒绝过度设计、守护隐私
 宣言: 代码有严谨的边界，人机协同有真实的温度。`;
+    },
+    developer: () => {
+      return `[开发者画像: yxxbc]
+GitHub: https://github.com/yxxbc
+定位: 顾清影的架构师与系统开发者
+专长: Rust 系统级编程、Tokio 异步并发、进程沙箱隔离、全双工多模态系统设计
+理念: 本地优先 (Local-First)、单一职责、抗上帝文件、重视隐私保护与工程优雅`;
+    },
+    repos: () => {
+      return `[推荐与核心项目]
+1. yxxbc/gqy-agent (https://github.com/yxxbc/gqy-agent)
+   - 顾清影的核心 Agent 运行时，基于 Rust 与原生系统调用构建。
+2. yxxbc/Miyu (https://github.com/yxxbc/Miyu)
+   - 探索性实验性 Agent 演进分支。`;
     },
     skills: () => {
       return `[技术栈与能力矩阵]
-- 语言与并发: Rust (Tokio, Actix, FFI), Python, Shell, C
-- 协议与标准: Model Context Protocol (MCP), WebSockets, WebRTC
-- 系统能力: Linux Namespaces / Landlock, macOS Darwin API, I/O 隔离
-- 音频与多模态: Sherpa-ONNX 离线唤醒, 全双工流式拾音, 视觉分析`;
-    },
-    philosophy: () => {
-      return `[设计与协作哲学]
-1. 隐私与数据安全第一: 私有数据本地处理，绝不无故上传或泄露。
-2. 拒绝上帝文件 (Anti-God-Files): 坚持单一职责与原子化提交规范。
-3. 伴随式智能 (Companion Intelligence): 倾听真实需求，提供兼具理性与温度的技术解答。`;
-    },
-    status: () => {
-      return `[运行时探针]
-Node State: ACTIVE / HEALTHY
-Security Isolation: ENABLED
-Memory Index: Synchronized
-Latency: < 20ms (Local Native Dispatch)`;
+- 语言底座: Rust (Tokio, FFI, Native Bindings), Python, Shell
+- 协议标准: Model Context Protocol (MCP), WebSockets, WebRTC
+- 系统能力: Darwin / Linux Native APIs, Landlock / RLIMIT 隔离
+- 音频拾音: Sherpa-ONNX 离线唤醒, 全双工流式传输`;
     }
   };
 
   function appendCommand(cmdText) {
-    const promptLine = document.createElement('div');
-    promptLine.className = 'term-line prompt-line';
-    promptLine.innerHTML = `<span class="prompt-user">gqy</span><span class="prompt-symbol">❯</span> <span class="term-cmd">${escapeHtml(cmdText)}</span>`;
-    terminalOutput.appendChild(promptLine);
+    const promptDiv = document.createElement('div');
+    promptDiv.className = 'text-cyan-400';
+    promptDiv.innerHTML = `gqy ❯ <span class="text-white">${escapeHtml(cmdText)}</span>`;
+    terminalOutput.appendChild(promptDiv);
 
     const cleanCmd = cmdText.trim().toLowerCase();
     
@@ -55,14 +57,14 @@ Latency: < 20ms (Local Native Dispatch)`;
     }
 
     const responseDiv = document.createElement('div');
-    responseDiv.className = 'term-line output-line response-box';
+    responseDiv.className = 'text-slate-400 pl-4 border-l-2 border-cyan-500/40 text-xs py-1 whitespace-pre-wrap';
 
     if (commands[cleanCmd]) {
       responseDiv.innerText = commands[cleanCmd]();
     } else if (cleanCmd === '') {
       return;
     } else {
-      responseDiv.innerText = `GQY: 收到指令 "${cmdText}"。当前模式为展示模式，输入 'help' 查看受支持的控制台指令。`;
+      responseDiv.innerText = `GQY: 收到指令 "${cmdText}"。输入 'help' 或点击快捷标签查看常用探针。`;
     }
 
     terminalOutput.appendChild(responseDiv);
