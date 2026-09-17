@@ -104,19 +104,37 @@ const shuffle = (arr) => {
         const edge = Math.sqrt(nx * nx + ny * ny);
         if (edge > 1) continue;
         const fadeOut = edge > 0.72 ? 1 - (edge - 0.72) / 0.28 : 1;
-        // 头发看深浅，五官和轮廓看边缘，皮肤、嘴唇、花饰看颜色
-        const dark = clamp((at(x, y) - 0.1) / 0.55);
+        // 不用饱和度判断（Safari 的色彩管理会让淡色背景也带上颜色，整张图都会被填满）：
+        // 暗 = 头发，偏暖 = 皮肤和嘴唇，边缘明显 = 五官和轮廓，其余雪色背景不画
+        const dark = at(x, y);
         const gx = at(x + 1, y - 1) + 2 * at(x + 1, y) + at(x + 1, y + 1) - at(x - 1, y - 1) - 2 * at(x - 1, y) - at(x - 1, y + 1);
         const gy = at(x - 1, y + 1) + 2 * at(x, y + 1) + at(x + 1, y + 1) - at(x - 1, y - 1) - 2 * at(x, y - 1) - at(x + 1, y - 1);
-        const line = clamp((Math.hypot(gx, gy) - 0.2) * 1.8);
+        const line = clamp((Math.hypot(gx, gy) - 0.25) * 2);
         const i = (y * cols + x) * 4;
         const R = data[i], G = data[i + 1], B = data[i + 2];
-        const sat = (Math.max(R, G, B) - Math.min(R, G, B)) / 255;
-        const v = Math.max(dark >= 0.3 ? 0.3 + dark * 0.7 : 0, line, sat > 0.06 && at(x, y) > 0.08 ? 0.35 + sat * 2 : 0);
-        if (v < 0.22) continue;
-        let c = tone(R, G, B, 3.4, 0.55 + (1 - dark) * 0.25);
-        // 头发染成靛青色的墨
-        if (dark > 0.45) c = [mix(c[0], 38, 0.7), mix(c[1], 62, 0.7), mix(c[2], 104, 0.7)];
+        const warm = (R - B) / 255;
+        let c, v;
+        if (dark > 0.58) {
+          // 头发：靛青色的墨
+          c = [mix(70, 34, dark), mix(92, 52, dark), mix(140, 96, dark)];
+          v = 0.55 + dark * 0.45;
+        } else if (warm > 0.02) {
+          // 皮肤、嘴唇、脸颊（实测额头 0.035、嘴唇 0.07，雪色背景 -0.055，白衣 -0.01）
+          const t = clamp((warm - 0.02) / 0.06);
+          if (line > 0.15) {
+            // 眼睛、眉毛、嘴的轮廓用墨色勾出来
+            c = [44, 52, 84];
+            v = 0.6 + line * 0.4;
+          } else {
+            c = [mix(236, 206, t), mix(168, 72, t), mix(158, 96, t)];
+            v = 0.5 + t * 0.5;
+          }
+        } else if (line > 0) {
+          c = [56, 70, 92];
+          v = 0.3 + line * 0.7;
+        } else {
+          continue;
+        }
         out.push({ x: left + x * step, y: top + y * step, a: clamp(v * fadeOut), c });
       }
     }
