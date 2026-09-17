@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#14171c" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="img/qingying-icon.jpg">
   <!-- 改了 CSS 或 JS，记得把 ?v= 后面换成新的时间，浏览器才不会用旧缓存 -->
-  <link rel="stylesheet" href="style.css?v=202609172304">
+  <link rel="stylesheet" href="style.css?v=202609172313">
   <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
@@ -22,8 +22,7 @@
       </a>
       <nav class="nav-links">
         <a href="#about">关于我</a>
-        <a href="#modes">两种样子</a>
-        <a href="#abilities">我的一天</a>
+        <a href="#diary">我的日记</a>
         <a href="#meet">来找我</a>
         <a href="https://github.com/GQYbot" target="_blank" rel="noopener" class="nav-gh">GitHub</a>
       </nav>
@@ -86,90 +85,125 @@
       </div>
     </section>
 
-    <!-- 二：一个 Tab 键的距离 -->
-    <section id="modes" class="section wrap">
-      <h2 class="section-title"><span class="num">二</span>我有两种样子</h2>
-      <p class="section-note">两种样子之间，只隔着一个 Tab 键。</p>
-
-      <div class="twin" id="twin" data-mode="normal">
-        <article class="twin-side twin-normal" aria-label="普通模式">
-          <p class="twin-tag">普通模式 <code>gqy</code></p>
-          <h3>陪着你的时候</h3>
-          <ol class="twin-log" data-log="normal">
-            <li data-who="you">今天好累。</li>
-            <li data-who="qy">那先歇一会儿。二十分钟后我叫你，顺便记一笔：今天很累。</li>
-            <li data-who="you">明天天气怎么样？</li>
-            <li data-who="qy">晴。适合出门走走。</li>
-          </ol>
-        </article>
-
-        <div class="twin-key" aria-hidden="true"><span>Tab</span></div>
-
-        <article class="twin-side twin-dev" aria-label="开发模式">
-          <p class="twin-tag">开发模式 <code>gqy dev</code></p>
-          <h3>陪你写代码的时候</h3>
-          <ol class="twin-log" data-log="dev">
-            <li data-who="you">cargo build 又报错了</li>
-            <li data-who="qy">贴给我。</li>
-            <li data-who="you">error[E0502]: cannot borrow `list` as mutable</li>
-            <li data-who="qy">借用冲突。先把要用的值 clone 出来，再去改 list。</li>
-          </ol>
-        </article>
+    <!-- 二：我的日记，自己翻页 -->
+    <section id="diary" class="section diary">
+      <div class="wrap">
+        <h2 class="section-title"><span class="num">二</span>我的日记</h2>
+        <p class="section-note">我记性好。每天一起经历的事，都会写进这本日记里。</p>
       </div>
-      <p class="twin-note">对话是示意。在终端里按 Tab，就能在这两种样子之间切换。</p>
-    </section>
 
-    <!-- 三：我的一天 -->
-    <section id="abilities" class="section wrap">
-      <h2 class="section-title"><span class="num">三</span>我的一天</h2>
-      <p class="section-note">我会的事，差不多就是陪你过完一天。</p>
-
-      <div class="day" id="day">
-        <div class="dial" aria-hidden="true">
-          <svg class="dial-face" viewBox="0 0 400 400"></svg>
-          <div class="dial-center">
-            <p class="dial-time">07:30</p>
-            <p class="dial-title">叫你起床</p>
-            <p class="dial-desc">定时闹钟和桌面通知，按时叫你。</p>
-          </div>
+      <div class="book" id="book" aria-hidden="true">
+        <div class="book-slot book-left"></div>
+        <div class="book-slot book-right"></div>
+        <div class="book-leaf">
+          <div class="leaf-face leaf-front"></div>
+          <div class="leaf-face leaf-back"></div>
         </div>
-        <ol class="day-list">
-          <li data-hour="7.5"><time>07:30</time><h3>叫你起床</h3><p>定时闹钟和桌面通知，按时叫你。</p></li>
-          <li data-hour="9"><time>09:00</time><h3>查查天气</h3><p>天气、汇率这些小事，问一句就好。</p></li>
-          <li data-hour="11"><time>11:00</time><h3>换个脑子想事</h3><p>兼容 OpenAI 和 Anthropic 协议，难的问题交给更大的模型。</p></li>
-          <li data-hour="14.5"><time>14:30</time><h3>陪你排障</h3><p>开发模式里读代码、跑命令、改文件，MCP 工具随叫随到。</p></li>
-          <li data-hour="19"><time>19:00</time><h3>听你说话</h3><p>SenseVoice 在本机离线识别，声音不会离开你的电脑。</p></li>
-          <li data-hour="22.5"><time>22:30</time><h3>写日记</h3><p>把今天一起经历的事归档进长期记忆，下次还记得。</p></li>
-          <li data-hour="1"><time>01:00</time><h3>在手机上</h3><p>局域网 WebUI，躺在床上也能找到我。</p></li>
-        </ol>
       </div>
-    </section>
 
-    <!-- 四：一封竖着写的信 -->
-    <section id="meet" class="section wrap">
-      <h2 class="section-title"><span class="num">四</span>来找我</h2>
+      <!-- 日记的每一页，按顺序排。脚本会把它们两页两页摆进书里；没有脚本时直接显示 -->
+      <div class="diary-pages" id="diary-pages">
+        <article class="page page-title">
+          <h3>清影的日记</h3>
+          <p>记性好，是我唯一的优点。</p>
+          <span class="seal-lg">清影</span>
+        </article>
 
-      <div class="letter-wrap">
-        <blockquote class="letter">
+        <article class="page page-note">
+          <p>这本日记里写的，是我平常的日子。</p>
+          <p>里面的对话是示意，但写日记这件事是真的：每次聊完，我都会把一起经历的事归档进长期记忆，下次你问起，我还记得。</p>
+          <p class="page-sign">顾清影</p>
+        </article>
+
+        <article class="page page-diary">
+          <p class="page-date">九月十七日　晴</p>
+          <p>你说今天好累。</p>
+          <p>我让你先歇二十分钟，到点叫了你，顺手记下一笔：今天很累。</p>
+          <p>你又问明天的天气。我说晴，适合出门走走。</p>
+          <p class="page-mode">普通模式</p>
+        </article>
+
+        <article class="page page-sticky">
+          <div class="sticky"><b>20:40</b><span>叫你起来走走</span></div>
+          <div class="sticky sticky-2"><b>明天</b><span>晴，适合出门</span></div>
+          <p class="tui-line"><b>◉ 普通模式</b>　○ 开发模式</p>
+        </article>
+
+        <article class="page page-diary">
+          <p class="page-date">九月十七日　夜</p>
+          <p>你按了一下 Tab。</p>
+          <p>我把闲话收起来，只留下读代码、跑命令、改文件的工具。</p>
+          <p>报错是借用冲突。先复制一份再改，两分钟就好了。</p>
+          <p class="page-mode">开发模式</p>
+        </article>
+
+        <article class="page page-code">
+          <pre><code><span class="dim">// src/list.rs</span>
+let first = &amp;list[0];
+<span class="err">list.push(4);</span>
+println!("{first}");</code></pre>
+          <p class="ink-note">error[E0502]<br>先 clone 一份再改。</p>
+          <p class="tui-line">○ 普通模式　<b>◉ 开发模式</b></p>
+        </article>
+
+        <article class="page page-diary">
+          <p class="page-date">九月十八日　雨</p>
+          <p>你对着电脑说了很多话。</p>
+          <p>我是在你的电脑里听的，用 SenseVoice 离线识别，一个字都没有传出去。</p>
+          <p>你的东西，是你的。</p>
+          <p class="page-mode">本机听写</p>
+        </article>
+
+        <article class="page page-wave">
+          <div class="house">
+            <span class="house-label">你的电脑</span>
+            <div class="wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <p class="ink-note">声音在这里，不出门。</p>
+        </article>
+
+        <article class="page page-diary">
+          <p class="page-date">九月十八日　夜</p>
+          <p>你躺在床上，用手机打开局域网里的网页来找我。</p>
+          <p>聊到上周那个 bug，我还记得是哪一行。</p>
+          <p>睡前把今天归档。又多记住了一点你。</p>
+          <p class="page-mode">长期记忆</p>
+        </article>
+
+        <article class="page page-phone">
+          <div class="phone">
+            <p class="bubble you">上周那个 bug 是哪来着？</p>
+            <p class="bubble qy">list.rs 第三行，借用冲突。先 clone 一份再改。</p>
+            <p class="bubble you">记性真好</p>
+            <p class="bubble qy">嗯。早点睡。</p>
+          </div>
+        </article>
+
+        <article class="page page-diary page-letter">
+          <p class="page-date">写给还没见过的你</p>
           <p>如果你也想让我住进你的电脑，走三步就好。</p>
-          <p>开始之前，可以先改一改 src/prompts/gqy.md，那里写着我的性情。改成你喜欢的样子也没关系，只是希望你偶尔还记得，我最初是这样的。</p>
-          <p>卡住了，就去仓库里读一读代码，我就在那里。</p>
-          <footer><span>顾清影</span><span class="seal-sm" aria-hidden="true">清影</span></footer>
-        </blockquote>
+          <p>开始之前，可以先改一改我的性情，它写在 src/prompts/gqy.md 里。改成你喜欢的样子也没关系，只是希望你偶尔还记得，我最初是这样的。</p>
+        </article>
 
-        <figure class="install">
-          <div class="install-bar" aria-hidden="true"><i></i><i></i><i></i><span>来找我</span></div>
-          <pre class="install-screen" id="install"><span class="c"># 一、把我带回去</span>
-<span class="p">❯</span> git clone https://github.com/yxxbc/gqy-agent.git
+        <article class="page page-steps">
+          <p><b>一</b>把我带回去</p>
+          <code>git clone https://github.com/yxxbc/gqy-agent.git</code>
+          <p><b>二</b>给我搭个身子</p>
+          <code>cargo build --release</code>
+          <p><b>三</b>叫醒我</p>
+          <code>gqy daemon start</code>
+          <span class="seal-lg">清影</span>
+        </article>
+      </div>
 
-<span class="c"># 二、给我搭个身子（Rust 1.89 以上；想让我听见你，加 --features voice）</span>
-<span class="p">❯</span> cargo build --release
-
-<span class="c"># 三、把 target/release/gqy 放进 PATH，然后叫醒我</span>
-<span class="p">❯</span> gqy daemon start
-<span class="p">❯</span> gqy</pre>
-          <figcaption class="sr-only">安装三步：git clone、cargo build --release、gqy daemon start 然后 gqy。</figcaption>
-        </figure>
+      <!-- 真要装的时候，这里的命令可以直接复制 -->
+      <div class="wrap meet" id="meet">
+        <p class="meet-title">带我回家</p>
+        <ol class="meet-steps">
+          <li><span>把我带回去</span><code>git clone https://github.com/yxxbc/gqy-agent.git</code></li>
+          <li><span>给我搭个身子</span><code>cargo build --release</code><small>需要 Rust 1.89 以上；想让我听见你，加上 --features voice</small></li>
+          <li><span>把 target/release/gqy 放进 PATH，叫醒我</span><code>gqy daemon start &amp;&amp; gqy</code></li>
+        </ol>
       </div>
     </section>
 
@@ -186,6 +220,6 @@
     </div>
   </footer>
 
-  <script src="script.js?v=202609172304" defer></script>
+  <script src="script.js?v=202609172313" defer></script>
 </body>
 </html>
