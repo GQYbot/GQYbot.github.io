@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#14171c" media="(prefers-color-scheme: dark)">
   <link rel="icon" href="img/qingying-icon.jpg">
   <!-- 改了 CSS 或 JS，记得把 ?v= 后面换成新的时间，浏览器才不会用旧缓存 -->
-  <link rel="stylesheet" href="style.css?v=202609172313">
+  <link rel="stylesheet" href="style.css?v=202609172335">
   <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
@@ -181,17 +181,16 @@ println!("{first}");</code></pre>
 
         <article class="page page-diary page-letter">
           <p class="page-date">写给还没见过的你</p>
-          <p>如果你也想让我住进你的电脑，走三步就好。</p>
-          <p>开始之前，可以先改一改我的性情，它写在 src/prompts/gqy.md 里。改成你喜欢的样子也没关系，只是希望你偶尔还记得，我最初是这样的。</p>
+          <p>如果你也想让我住进你的电脑，一行命令就好，不用自己编译。</p>
+          <p>想改我的性情，就从源码编译，它写在 src/prompts/gqy.md 里。改成你喜欢的样子也没关系，只是希望你偶尔还记得，我最初是这样的。</p>
         </article>
 
         <article class="page page-steps">
-          <p><b>一</b>把我带回去</p>
-          <code>git clone https://github.com/yxxbc/gqy-agent.git</code>
-          <p><b>二</b>给我搭个身子</p>
-          <code>cargo build --release</code>
+          <p><b>一</b>打开终端</p>
+          <p><b>二</b>粘贴这一行</p>
+          <code>curl -fsSL https://raw.githubusercontent.com/yxxbc/gqy-agent/gqy/install.sh | sh</code>
           <p><b>三</b>叫醒我</p>
-          <code>gqy daemon start</code>
+          <code>gqy init &amp;&amp; gqy daemon start &amp;&amp; gqy</code>
           <span class="seal-lg">清影</span>
         </article>
       </div>
@@ -199,11 +198,17 @@ println!("{first}");</code></pre>
       <!-- 真要装的时候，这里的命令可以直接复制 -->
       <div class="wrap meet" id="meet">
         <p class="meet-title">带我回家</p>
-        <ol class="meet-steps">
-          <li><span>把我带回去</span><code>git clone https://github.com/yxxbc/gqy-agent.git</code></li>
-          <li><span>给我搭个身子</span><code>cargo build --release</code><small>需要 Rust 1.89 以上；想让我听见你，加上 --features voice</small></li>
-          <li><span>把 target/release/gqy 放进 PATH，叫醒我</span><code>gqy daemon start &amp;&amp; gqy</code></li>
-        </ol>
+        <p class="meet-lede">复制这一行，粘贴到终端里运行：</p>
+        <div class="oneline-box">
+          <code id="install-cmd">curl -fsSL https://raw.githubusercontent.com/yxxbc/gqy-agent/gqy/install.sh | sh</code>
+          <button type="button" class="copy-btn" data-copy="#install-cmd">复制</button>
+        </div>
+        <ul class="meet-notes">
+          <li>Linux（x86_64 / ARM64）和 macOS（Apple 芯片 / Intel）都能用，会自动认出你的电脑。</li>
+          <li>装到 <code>~/.local</code>，不需要 root，也不用装 Rust。再运行一次就是升级。</li>
+          <li>装好以后：<code>gqy init</code> 初始化，<code>gqy daemon start</code> 启动后台，<code>gqy</code> 就能见到我。</li>
+          <li>想改我的性情、或者要语音功能，就<a href="https://github.com/yxxbc/gqy-agent#从源码构建" target="_blank" rel="noopener">从源码编译</a>。</li>
+        </ul>
       </div>
     </section>
 
@@ -220,6 +225,6 @@ println!("{first}");</code></pre>
     </div>
   </footer>
 
-  <script src="script.js?v=202609172313" defer></script>
+  <script src="script.js?v=202609172335" defer></script>
 </body>
 </html>

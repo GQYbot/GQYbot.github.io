@@ -494,14 +494,44 @@ html:not(.js) .diary-pages { display: grid; gap: 20px; max-width: 520px; margin:
 html:not(.js) .page { position: relative; min-height: 360px; }
 
 /* 真要装时，可以直接复制的命令 */
-.meet { margin-top: 64px; }
-.meet-title { margin: 0 0 14px; font-family: var(--serif); font-size: 20px; color: var(--ink); letter-spacing: .2em; }
-.meet-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; counter-reset: m; }
-.meet-steps li { counter-increment: m; display: flex; flex-direction: column; gap: 8px; padding: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
-.meet-steps span { font-size: 14px; color: var(--ink-2); }
-.meet-steps span::before { content: counter(m, cjk-ideographic) "　"; color: var(--rouge); }
-.meet-steps code { padding: 8px 10px; font-size: 12.5px; overflow-wrap: anywhere; }
-.meet-steps small { font-size: 12px; color: var(--ink-3); }
+.meet { margin-top: 64px; max-width: 760px; }
+.meet-title { margin: 0 0 6px; font-family: var(--serif); font-size: 22px; color: var(--ink); letter-spacing: .2em; }
+.meet-lede { margin: 0 0 12px; color: var(--ink-2); }
+.oneline-box {
+  display: flex;
+  align-items: stretch;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1f1f2d;
+  box-shadow: var(--shadow);
+}
+.oneline-box code {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 16px;
+  font: 13.5px/1.6 var(--mono);
+  color: #e6c2dc;
+  background: transparent;
+  border-radius: 0;
+  overflow-wrap: anywhere;
+  user-select: all;
+  -webkit-user-select: all;
+}
+.copy-btn {
+  flex: none;
+  padding: 0 20px;
+  font: 600 15px var(--serif);
+  letter-spacing: .1em;
+  color: #fff;
+  background: var(--qing);
+  border: 0;
+  cursor: pointer;
+  transition: background-color .2s ease;
+}
+.copy-btn:hover { background: color-mix(in srgb, var(--qing) 85%, #000); }
+.copy-btn.done { background: var(--rouge); }
+.meet-notes { margin: 18px 0 0; padding-left: 1.2em; color: var(--ink-2); font-size: 14.5px; line-height: 1.9; }
+.meet-notes code { font-size: .88em; }
 
 /* 页脚 */
 .foot { margin-top: 120px; padding: 40px 0 48px; border-top: 1px solid var(--line); font-size: 14px; color: var(--ink-3); }
@@ -515,7 +545,6 @@ html:not(.js) .page { position: relative; min-height: 360px; }
 @media (max-width: 860px) {
   .about { grid-template-columns: 1fr; gap: 40px; }
   .portrait { max-width: 360px; }
-  .meet-steps { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 640px) {

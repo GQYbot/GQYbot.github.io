@@ -500,3 +500,29 @@ function whenVisible(el, play) {
     }
   });
 })();
+
+
+// 复制一键安装命令
+document.querySelectorAll('.copy-btn[data-copy]').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const text = document.querySelector(btn.dataset.copy).textContent.trim();
+    let ok = false;
+    try {
+      await navigator.clipboard.writeText(text);
+      ok = true;
+    } catch (e) {
+      // 旧浏览器：退回到选中文字再复制
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.select();
+      try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+      area.remove();
+    }
+    btn.textContent = ok ? '已复制' : '请手动复制';
+    btn.classList.toggle('done', ok);
+    setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('done'); }, 2000);
+  });
+});
