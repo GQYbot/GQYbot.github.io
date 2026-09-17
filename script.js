@@ -126,8 +126,9 @@ const shuffle = (arr) => {
             c = [44, 52, 84];
             v = 0.6 + line * 0.4;
           } else {
-            c = [mix(236, 206, t), mix(168, 72, t), mix(158, 96, t)];
-            v = 0.5 + t * 0.5;
+            // 皮肤用自然的暖象牙色，只有最红的嘴唇才带一点红
+            c = t > 0.75 ? [190, 92, 98] : [212, 178, 158];
+            v = 0.7;
           }
         } else if (line > 0) {
           c = [56, 70, 92];
@@ -396,5 +397,206 @@ const shuffle = (arr) => {
       resize();
       setScene(scene, performance.now(), true);
     }, 200);
+  });
+})();
+
+
+// ───────── 下面几块：看见了才开始播，一直循环 ─────────
+
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+function whenVisible(el, play) {
+  if (!el) return;
+  if (reduceMotion || !('IntersectionObserver' in window)) { play(true); return; }
+  let started = false;
+  new IntersectionObserver((entries) => {
+    if (started || !entries.some((e) => e.isIntersecting)) return;
+    started = true;
+    play(false);
+  }, { threshold: 0.3 }).observe(el);
+}
+
+// 二：一个 Tab 键的距离
+(function () {
+  const twin = document.getElementById('twin');
+  if (!twin) return;
+  const key = twin.querySelector('.twin-key');
+  const logs = {
+    normal: [...twin.querySelectorAll('[data-log="normal"] li')],
+    dev: [...twin.querySelectorAll('[data-log="dev"] li')],
+  };
+  const texts = new Map();
+  Object.values(logs).flat().forEach((li) => texts.set(li, li.textContent));
+
+  async function typeLog(mode) {
+    const items = logs[mode];
+    items.forEach((li) => { li.textContent = ''; li.classList.remove('shown', 'typing'); });
+    for (const li of items) {
+      const text = texts.get(li);
+      const you = li.dataset.who === 'you';
+      await wait(you ? 500 : 900);
+      li.classList.add('shown', 'typing');
+      for (let i = 1; i <= text.length; i++) {
+        li.textContent = text.slice(0, i);
+        await wait(you ? 35 : 60);
+      }
+      li.classList.remove('typing');
+    }
+  }
+
+  async function press() {
+    key.classList.add('press');
+    await wait(160);
+    key.classList.remove('press');
+  }
+
+  whenVisible(twin, async (instant) => {
+    if (instant) {
+      Object.values(logs).flat().forEach((li) => li.classList.add('shown'));
+      return;
+    }
+    let mode = 'normal';
+    for (;;) {
+      twin.dataset.mode = mode;
+      await wait(700);
+      await typeLog(mode);
+      await wait(2600);
+      await press();
+      mode = mode === 'normal' ? 'dev' : 'normal';
+    }
+  });
+})();
+
+// 三：我的一天，表盘上的指针自己转
+(function () {
+  const day = document.getElementById('day');
+  if (!day) return;
+  const svg = day.querySelector('.dial-face');
+  const center = day.querySelector('.dial-center');
+  const [timeEl, titleEl, descEl] = center.querySelectorAll('p');
+  const items = [...day.querySelectorAll('.day-list li')].map((li) => ({
+    li,
+    hour: parseFloat(li.dataset.hour),
+    time: li.querySelector('time').textContent,
+    title: li.querySelector('h3').textContent,
+    desc: li.querySelector('p').textContent,
+  }));
+  const sorted = [...items].sort((a, b) => a.hour - b.hour);
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const C = 200, R = 170;
+  const el = (name, attrs) => {
+    const node = document.createElementNS(NS, name);
+    Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
+    svg.appendChild(node);
+    return node;
+  };
+  // 0 点在正上方，顺时针走
+  const at = (hour, r) => {
+    const a = (hour / 24) * Math.PI * 2 - Math.PI / 2;
+    return [C + Math.cos(a) * r, C + Math.sin(a) * r];
+  };
+
+  // 夜里（22 点到 6 点）画一段深一点的弧
+  const [x1, y1] = at(22, R - 12);
+  const [x2, y2] = at(6, R - 12);
+  el('path', { class: 'night-arc', d: `M ${x1} ${y1} A ${R - 12} ${R - 12} 0 0 1 ${x2} ${y2}` });
+  el('circle', { class: 'ring', cx: C, cy: C, r: R });
+  for (let h = 0; h < 24; h++) {
+    const big = h % 6 === 0;
+    const [ax, ay] = at(h, R);
+    const [bx, by] = at(h, R - (big ? 14 : 7));
+    el('line', { class: big ? 'tick big' : 'tick', x1: ax, y1: ay, x2: bx, y2: by });
+    if (big) {
+      const [tx, ty] = at(h, R + 18);
+      el('text', { class: 'hour', x: tx, y: ty }).textContent = String(h);
+    }
+  }
+  const marks = items.map((it) => {
+    const [mx, my] = at(it.hour, R);
+    return el('circle', { class: 'mark', cx: mx, cy: my, r: 6 });
+  });
+  const hand = el('line', { class: 'hand', x1: C, y1: C, x2: C, y2: C - (R - 30) });
+  el('circle', { class: 'hub', cx: C, cy: C, r: 5 });
+
+  let current = null;
+  function show(hour) {
+    const [hx, hy] = at(hour, R - 30);
+    hand.setAttribute('x2', hx);
+    hand.setAttribute('y2', hy);
+    // 找到最近已经过去的那件事
+    let pickItem = sorted[sorted.length - 1];
+    for (const it of sorted) if (it.hour <= hour) pickItem = it;
+    if (pickItem === current) return;
+    current = pickItem;
+    timeEl.textContent = pickItem.time;
+    titleEl.textContent = pickItem.title;
+    descEl.textContent = pickItem.desc;
+    center.classList.remove('swap');
+    void center.offsetWidth;
+    center.classList.add('swap');
+    items.forEach((it, i) => {
+      const on = it === pickItem;
+      it.li.classList.toggle('on', on);
+      marks[i].classList.toggle('on', on);
+      marks[i].setAttribute('r', on ? 9 : 6);
+    });
+  }
+
+  show(7.5);
+  whenVisible(day, (instant) => {
+    if (instant) return;
+    // 一小时走 1.1 秒，一天大约 26 秒
+    let hour = 6.5;
+    let last = performance.now();
+    const tick = (now) => {
+      hour = (hour + ((now - last) / 1100)) % 24;
+      last = now;
+      show(hour);
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+})();
+
+// 四：小终端自己把三步敲一遍
+(function () {
+  const screen = document.getElementById('install');
+  if (!screen) return;
+  const LINES = [
+    ['c', '# 一、把我带回去'],
+    ['p', 'git clone https://github.com/yxxbc/gqy-agent.git'],
+    ['', ''],
+    ['c', '# 二、给我搭个身子（Rust 1.89 以上；想让我听见你，加 --features voice）'],
+    ['p', 'cargo build --release'],
+    ['', ''],
+    ['c', '# 三、把 target/release/gqy 放进 PATH，然后叫醒我'],
+    ['p', 'gqy daemon start'],
+    ['p', 'gqy'],
+  ];
+  const esc = (t) => t.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
+  whenVisible(screen, async (instant) => {
+    if (instant) return;
+    for (;;) {
+      screen.innerHTML = '';
+      for (const [kind, text] of LINES) {
+        if (kind !== 'p') {
+          screen.insertAdjacentHTML('beforeend', `${kind ? `<span class="c">${esc(text)}</span>` : ''}\n`);
+          await wait(kind ? 350 : 120);
+          continue;
+        }
+        screen.insertAdjacentHTML('beforeend', '<span class="p">❯</span> <span class="t"></span><span class="cursor"></span>');
+        const target = screen.lastElementChild.previousElementSibling;
+        for (const ch of text) {
+          target.textContent += ch;
+          await wait(40 + Math.random() * 45);
+        }
+        await wait(450);
+        screen.querySelector('.cursor').remove();
+        screen.insertAdjacentHTML('beforeend', '\n');
+      }
+      await wait(7000);
+    }
   });
 })();

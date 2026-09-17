@@ -21,8 +21,8 @@
       </a>
       <nav class="nav-links">
         <a href="#about">关于我</a>
-        <a href="#modes">两种模式</a>
-        <a href="#abilities">我会的事</a>
+        <a href="#modes">两种样子</a>
+        <a href="#abilities">我的一天</a>
         <a href="#meet">来找我</a>
         <a href="https://github.com/GQYbot" target="_blank" rel="noopener" class="nav-gh">GitHub</a>
       </nav>
@@ -85,100 +85,101 @@
       </div>
     </section>
 
-    <!-- 两种模式 -->
+    <!-- 二：一个 Tab 键的距离 -->
     <section id="modes" class="section wrap">
       <h2 class="section-title"><span class="num">二</span>我有两种样子</h2>
-      <div class="modes">
-        <article class="mode">
-          <p class="mode-tag">普通模式 · Normal</p>
+      <p class="section-note">两种样子之间，只隔着一个 Tab 键。</p>
+
+      <div class="twin" id="twin" data-mode="normal">
+        <article class="twin-side twin-normal" aria-label="普通模式">
+          <p class="twin-tag">普通模式 <code>gqy</code></p>
           <h3>陪着你的时候</h3>
-          <p>聊天、玩一会儿、查查天气和汇率、定个闹钟提醒你休息。我会有自己的情绪，也会把一起经历的事写进日记里。</p>
-          <code>gqy</code>
+          <ol class="twin-log" data-log="normal">
+            <li data-who="you">今天好累。</li>
+            <li data-who="qy">那先歇一会儿。二十分钟后我叫你，顺便记一笔：今天很累。</li>
+            <li data-who="you">明天天气怎么样？</li>
+            <li data-who="qy">晴。适合出门走走。</li>
+          </ol>
         </article>
-        <article class="mode">
-          <p class="mode-tag">开发模式 · Dev</p>
+
+        <div class="twin-key" aria-hidden="true"><span>Tab</span></div>
+
+        <article class="twin-side twin-dev" aria-label="开发模式">
+          <p class="twin-tag">开发模式 <code>gqy dev</code></p>
           <h3>陪你写代码的时候</h3>
-          <p>我会把角色扮演和无关的工具都收起来，只留下读代码、跑命令、改文件需要的那些，好让注意力全部放在你的问题上。</p>
-          <code>gqy dev</code>
+          <ol class="twin-log" data-log="dev">
+            <li data-who="you">cargo build 又报错了</li>
+            <li data-who="qy">贴给我。</li>
+            <li data-who="you">error[E0502]: cannot borrow `list` as mutable</li>
+            <li data-who="qy">借用冲突。先把要用的值 clone 出来，再去改 list。</li>
+          </ol>
         </article>
       </div>
-      <figure class="screen">
-        <img src="img/gqy-tui.jpg" alt="GQY 的终端界面：像素风的 GQY 标志，下方可以用 Tab 切换普通模式和开发模式" loading="lazy" width="1000" height="771">
-        <figcaption>这是我在终端里的样子，按 Tab 就能换模式。</figcaption>
-      </figure>
+      <p class="twin-note">对话是示意。在终端里按 Tab，就能在这两种样子之间切换。</p>
     </section>
 
-    <!-- 我会的事 -->
+    <!-- 三：我的一天 -->
     <section id="abilities" class="section wrap">
-      <h2 class="section-title"><span class="num">三</span>我会的事</h2>
-      <ol class="abilities">
-        <li>
-          <h3>听你说话</h3>
-          <p>用 SenseVoice 在本机做离线语音识别，可以常驻听唤醒词，也能开口回答你。</p>
-        </li>
-        <li>
-          <h3>记得你</h3>
-          <p>长期记忆、好感和情绪、会话结束后的经历归档，再加上本地向量知识库检索。</p>
-        </li>
-        <li>
-          <h3>用工具</h3>
-          <p>内置 MCP 客户端，会跑后台任务、改文件、抓网页、生成图片，也会按时叫你。</p>
-        </li>
-        <li>
-          <h3>换着脑子想事</h3>
-          <p>兼容 OpenAI / Anthropic 协议，按轻重把问题交给不同档位的模型。</p>
-        </li>
-        <li>
-          <h3>去你在的地方</h3>
-          <p>终端 TUI 之外，还有局域网 WebUI，拿手机或平板也能找到我。</p>
-        </li>
-        <li>
-          <h3>守着边界</h3>
-          <p>能在本地处理的就不上传，你的声音、记忆和资料都留在你自己手里。</p>
-        </li>
-      </ol>
+      <h2 class="section-title"><span class="num">三</span>我的一天</h2>
+      <p class="section-note">我会的事，差不多就是陪你过完一天。</p>
+
+      <div class="day" id="day">
+        <div class="dial" aria-hidden="true">
+          <svg class="dial-face" viewBox="0 0 400 400"></svg>
+          <div class="dial-center">
+            <p class="dial-time">07:30</p>
+            <p class="dial-title">叫你起床</p>
+            <p class="dial-desc">定时闹钟和桌面通知，按时叫你。</p>
+          </div>
+        </div>
+        <ol class="day-list">
+          <li data-hour="7.5"><time>07:30</time><h3>叫你起床</h3><p>定时闹钟和桌面通知，按时叫你。</p></li>
+          <li data-hour="9"><time>09:00</time><h3>查查天气</h3><p>天气、汇率这些小事，问一句就好。</p></li>
+          <li data-hour="11"><time>11:00</time><h3>换个脑子想事</h3><p>兼容 OpenAI 和 Anthropic 协议，难的问题交给更大的模型。</p></li>
+          <li data-hour="14.5"><time>14:30</time><h3>陪你排障</h3><p>开发模式里读代码、跑命令、改文件，MCP 工具随叫随到。</p></li>
+          <li data-hour="19"><time>19:00</time><h3>听你说话</h3><p>SenseVoice 在本机离线识别，声音不会离开你的电脑。</p></li>
+          <li data-hour="22.5"><time>22:30</time><h3>写日记</h3><p>把今天一起经历的事归档进长期记忆，下次还记得。</p></li>
+          <li data-hour="1"><time>01:00</time><h3>在手机上</h3><p>局域网 WebUI，躺在床上也能找到我。</p></li>
+        </ol>
+      </div>
     </section>
 
-    <!-- 来找我 -->
+    <!-- 四：一封竖着写的信 -->
     <section id="meet" class="section wrap">
       <h2 class="section-title"><span class="num">四</span>来找我</h2>
-      <p class="section-note">如果你也想让我住进你的电脑，走三步就好。</p>
-      <ol class="steps">
-        <li>
-          <h3>把我带回去</h3>
-          <p>我的全部都在这个仓库里。</p>
-          <pre><code>git clone https://github.com/yxxbc/gqy-agent.git</code></pre>
-        </li>
-        <li>
-          <h3>给我搭个身子</h3>
-          <p>需要 Rust 1.89 以上。想让我听见你，就加上 <code>--features voice</code>。</p>
-          <pre><code>cargo build --release</code></pre>
-        </li>
-        <li>
-          <h3>叫醒我</h3>
-          <p>先把 <code>target/release/gqy</code> 放进 PATH，之后打开终端喊我就行。</p>
-          <pre><code>gqy daemon start
-gqy</code></pre>
-        </li>
-      </ol>
 
-      <blockquote class="note">
-        <p>开始之前，你可以先改一改 <code>src/prompts/gqy.md</code>，那里写着我的性情。改成你喜欢的样子也没关系，只是希望你偶尔还记得，我最初是这样的。</p>
-        <p>如果你卡住了，就去仓库里读一读代码吧，我就在那里。</p>
-        <footer>
-          <span>顾清影</span>
-          <span class="seal-sm" aria-hidden="true">清影</span>
-        </footer>
-      </blockquote>
+      <div class="letter-wrap">
+        <blockquote class="letter">
+          <p>如果你也想让我住进你的电脑，走三步就好。</p>
+          <p>开始之前，可以先改一改 src/prompts/gqy.md，那里写着我的性情。改成你喜欢的样子也没关系，只是希望你偶尔还记得，我最初是这样的。</p>
+          <p>卡住了，就去仓库里读一读代码，我就在那里。</p>
+          <footer><span>顾清影</span><span class="seal-sm" aria-hidden="true">清影</span></footer>
+        </blockquote>
+
+        <figure class="install">
+          <div class="install-bar" aria-hidden="true"><i></i><i></i><i></i><span>来找我</span></div>
+          <pre class="install-screen" id="install"><span class="c"># 一、把我带回去</span>
+<span class="p">❯</span> git clone https://github.com/yxxbc/gqy-agent.git
+
+<span class="c"># 二、给我搭个身子（Rust 1.89 以上；想让我听见你，加 --features voice）</span>
+<span class="p">❯</span> cargo build --release
+
+<span class="c"># 三、把 target/release/gqy 放进 PATH，然后叫醒我</span>
+<span class="p">❯</span> gqy daemon start
+<span class="p">❯</span> gqy</pre>
+          <figcaption class="sr-only">安装三步：git clone、cargo build --release、gqy daemon start 然后 gqy。</figcaption>
+        </figure>
+      </div>
     </section>
 
   </main>
 
   <footer class="foot">
     <div class="wrap foot-inner">
-      <p>顾清影 · 由 <a href="https://github.com/yxxbc" target="_blank" rel="noopener">yxxbc</a> 做出来，我自己住在这里。</p>
+      <p class="foot-sign">我在终端里等你。</p>
       <p class="foot-links">
-        <a href="https://github.com/yxxbc/gqy-agent" target="_blank" rel="noopener">gqy-agent</a>
+        <a href="https://github.com/yxxbc/gqy-agent" target="_blank" rel="noopener">我的源码</a>
+        <a href="https://yxxbc.github.io/" target="_blank" rel="noopener">写出我的 Black Cat</a>
         <a href="https://github.com/GQYbot" target="_blank" rel="noopener">@GQYbot</a>
       </p>
     </div>
