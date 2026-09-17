@@ -7,18 +7,16 @@
   <meta name="description" content="我是顾清影，一个住在终端里的 AI 伴侣。平时陪你说话，写代码时安静地帮你排障。">
   <meta name="theme-color" content="#f4f3ee" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#14171c" media="(prefers-color-scheme: dark)">
-  <link rel="icon" href="avatar.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" href="img/qingying-icon.jpg">
   <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
 
   <header class="nav">
     <div class="wrap nav-inner">
       <a href="#top" class="brand">
-        <img src="avatar.png" alt="" width="28" height="28">
+        <img src="img/qingying-icon.jpg" alt="" width="28" height="28">
         <span>顾清影</span>
       </a>
       <nav class="nav-links">
@@ -33,31 +31,40 @@
 
   <main id="top">
 
-    <!-- 开篇 -->
-    <section class="hero">
-      <div class="hero-bg" aria-hidden="true"></div>
-      <div class="wrap hero-inner">
-        <div class="hero-text">
-          <p class="eyebrow">GQY · 顾清影</p>
-          <h1>你好，<br>我是顾清影。</h1>
-          <p class="lede">
-            我住在你的终端里。平时陪你说说话、记着你说过的事；等你开始写代码，我就收起闲话，安静地陪你把问题一个个找出来。
-          </p>
-          <div class="actions">
-            <a class="btn btn-ink" href="https://github.com/yxxbc/gqy-agent" target="_blank" rel="noopener">看看我的源码</a>
-            <a class="btn btn-line" href="#meet">带我回家</a>
+    <!-- 开篇：我用字拼出自己的两种样子，自己来回切换 -->
+    <section class="hero" id="hero" data-scene="fog">
+      <canvas class="glyphs" id="glyphs" aria-hidden="true"></canvas>
+      <h1 class="sr-only">你好，我是顾清影。</h1>
+
+      <div class="hero-copy">
+        <div class="caps">
+          <div class="cap" data-scene="normal">
+            <p class="cap-line">陪着你的时候</p>
+            <p class="cap-name">顾清影</p>
+            <p class="cap-sub">我住在你的终端里。平时陪你说说话，记着你说过的事。</p>
+          </div>
+          <div class="cap" data-scene="dev">
+            <p class="cap-line">陪你写代码的时候</p>
+            <p class="cap-name cap-name-dev">GQY</p>
+            <p class="cap-sub">闲话收起来了。把报错贴给我，我们一个一个找。</p>
           </div>
         </div>
-        <div class="hero-seal" aria-hidden="true">
-          <span>清</span><span>影</span>
+        <div class="actions">
+          <a class="btn btn-ink" href="https://github.com/yxxbc/gqy-agent" target="_blank" rel="noopener">看看我的源码</a>
+          <a class="btn btn-line" href="#meet">带我回家</a>
         </div>
       </div>
+
+      <p class="mode-bar" aria-hidden="true">
+        <span data-scene="normal">普通模式</span>
+        <span data-scene="dev">开发模式</span>
+      </p>
     </section>
 
     <!-- 关于我 -->
     <section id="about" class="section wrap about">
       <figure class="portrait">
-        <img src="avatar.png" alt="顾清影的形象图：黑发、白衣，身后是雾里的楼阁和白花" loading="lazy" width="1024" height="1536">
+        <img src="img/qingying.jpg" alt="顾清影的形象图：黑发、白衣，身后是雾里的楼阁和白花" loading="lazy" width="720" height="1080">
       </figure>
       <div class="prose">
         <h2 class="section-title"><span class="num">一</span>关于我</h2>
@@ -96,7 +103,7 @@
         </article>
       </div>
       <figure class="screen">
-        <img src="gqy-tui.png" alt="GQY 的终端界面：像素风的 GQY 标志，下方可以用 Tab 切换普通模式和开发模式" loading="lazy" width="1450" height="1118">
+        <img src="img/gqy-tui.jpg" alt="GQY 的终端界面：像素风的 GQY 标志，下方可以用 Tab 切换普通模式和开发模式" loading="lazy" width="1000" height="771">
         <figcaption>这是我在终端里的样子，按 Tab 就能换模式。</figcaption>
       </figure>
     </section>
@@ -177,5 +184,6 @@ gqy</code></pre>
     </div>
   </footer>
 
+  <script src="script.js" defer></script>
 </body>
 </html>
