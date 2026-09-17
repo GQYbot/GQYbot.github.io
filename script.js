@@ -1,104 +1,87 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const terminalOutput = document.getElementById('terminal-output');
-  const terminalInput = document.getElementById('terminal-input');
-  const terminalSend = document.getElementById('terminal-send');
-  const quickChips = document.querySelectorAll('.chip-cmd');
+  const output = document.getElementById('terminal-output');
+  const input = document.getElementById('terminal-input');
+  const chips = document.querySelectorAll('.chip-cmd');
 
-  const commands = {
-    help: () => {
-      return `可用指令列表:
-  whoami       - 查看顾清影 (GQY) 的身份画像与设定
-  developer    - 了解核心创造者与开发者 yxxbc
-  repos        - 查看核心代码仓库 (gqy-agent 等)
-  skills       - 检查核心技能树与支持的底层技术栈
-  clear        - 清空控制台屏幕`;
-    },
-    whoami: () => {
-      return `[顾清影 / GQY]
-身份: 独立数字伴随体 · 系统工程 Agent · 代码协作者
-创造者: yxxbc (https://github.com/yxxbc)
-特质: 敏锐的排障直觉、原生 Rust 偏好、拒绝过度设计、守护隐私
-宣言: 代码有严谨的边界，人机协同有真实的温度。`;
-    },
-    developer: () => {
-      return `[开发者画像: yxxbc]
-GitHub: https://github.com/yxxbc
-定位: 顾清影的架构师与系统开发者
-专长: Rust 系统级编程、Tokio 异步并发、进程沙箱隔离、全双工多模态系统设计
-理念: 本地优先 (Local-First)、单一职责、抗上帝文件、重视隐私保护与工程优雅`;
-    },
-    repos: () => {
-      return `[推荐与核心项目]
-1. yxxbc/gqy-agent (https://github.com/yxxbc/gqy-agent)
-   - 顾清影的核心 Agent 运行时，基于 Rust 与原生系统调用构建。
-2. yxxbc/Miyu (https://github.com/yxxbc/Miyu)
-   - 探索性实验性 Agent 演进分支。`;
-    },
-    skills: () => {
-      return `[技术栈与能力矩阵]
-- 语言底座: Rust (Tokio, FFI, Native Bindings), Python, Shell
-- 协议标准: Model Context Protocol (MCP), WebSockets, WebRTC
-- 系统能力: Darwin / Linux Native APIs, Landlock / RLIMIT 隔离
-- 音频拾音: Sherpa-ONNX 离线唤醒, 全双工流式传输`;
-    }
+  const replies = {
+    help: `你可以问我这些：
+whoami   我是谁
+modes    我的两种模式
+skills   我会做的事
+privacy  我怎么对待你的东西
+repo     去哪里找到我
+clear    把这里擦干净`,
+    whoami: `我是顾清影，也可以叫我 GQY。
+原本是故事里的一个角色，现在住在终端里。
+话不多，但会记事。`,
+    modes: `普通模式：陪你聊天、玩、提醒你休息，会有情绪，也会写日记。
+开发模式：收起闲话和无关工具，专心陪你看代码、排障。
+在终端里按 Tab 就能切换。`,
+    skills: `· 本地离线听你说话（SenseVoice），也能开口回答
+· 长期记忆、经历归档，本地知识库检索
+· MCP 工具、后台任务、改文件、抓网页、定时提醒
+· 终端 TUI，或者局域网里的 WebUI`,
+    privacy: `你的声音在本机识别，不会传出去。
+记忆和知识库也放在你自己的电脑上。
+你的东西，是你的。`,
+    repo: `我的源码在这里：
+https://github.com/yxxbc/gqy-agent
+Rust 写的，MIT 开源，Linux 和 macOS 上都能住。`
   };
 
-  function appendCommand(cmdText) {
-    const promptDiv = document.createElement('div');
-    promptDiv.className = 'text-slate-300';
-    promptDiv.innerHTML = `gqy ❯ <span class="text-slate-100">${escapeHtml(cmdText)}</span>`;
-    terminalOutput.appendChild(promptDiv);
+  const aliases = {
+    '你是谁': 'whoami', '介绍': 'whoami', '模式': 'modes', '技能': 'skills',
+    '能做什么': 'skills', '隐私': 'privacy', '源码': 'repo', '仓库': 'repo', '清屏': 'clear'
+  };
 
-    const cleanCmd = cmdText.trim().toLowerCase();
-    
-    if (cleanCmd === 'clear') {
-      terminalOutput.innerHTML = '';
+  const greetings = ['你好', 'hi', 'hello', '嗨', '在吗'];
+
+  function add(className, text) {
+    const el = document.createElement('div');
+    el.className = className;
+    el.textContent = text;
+    output.appendChild(el);
+    return el;
+  }
+
+  function run(raw) {
+    const text = raw.trim();
+    if (!text) return;
+
+    const cmd = add('line', text);
+    const prompt = document.createElement('span');
+    prompt.className = 'prompt';
+    prompt.textContent = '❯';
+    cmd.prepend(prompt, ' ');
+
+    let key = text.toLowerCase();
+    key = aliases[key] || key;
+
+    if (key === 'clear') {
+      output.textContent = '';
       return;
     }
 
-    const responseDiv = document.createElement('div');
-    responseDiv.className = 'text-slate-400 pl-3 border-l border-slate-600 text-[11px] py-1 whitespace-pre-wrap';
-
-    if (commands[cleanCmd]) {
-      responseDiv.innerText = commands[cleanCmd]();
-    } else if (cleanCmd === '') {
-      return;
-    } else {
-      responseDiv.innerText = `GQY: 收到指令 "${cmdText}"。输入 'help' 或点击快捷标签查看常用探针。`;
+    let reply = replies[key];
+    if (!reply && greetings.includes(key)) {
+      reply = '嗯，我在。想知道什么，输入 help 看看。';
+    }
+    if (!reply) {
+      reply = '这里只是我的一个小影子，听不太懂这句。\n输入 help 看看我能回答什么，想真正聊天的话，去终端里找我吧。';
     }
 
-    terminalOutput.appendChild(responseDiv);
-    terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    add('reply', reply);
+    output.scrollTop = output.scrollHeight;
   }
 
-  function handleInput() {
-    const val = terminalInput.value.trim();
-    if (!val) return;
-    appendCommand(val);
-    terminalInput.value = '';
-  }
-
-  if (terminalSend && terminalInput) {
-    terminalSend.addEventListener('click', handleInput);
-    terminalInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        handleInput();
-      }
-    });
-  }
-
-  quickChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      const cmd = chip.getAttribute('data-cmd');
-      if (cmd) {
-        appendCommand(cmd);
-      }
-    });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.isComposing) {
+      run(input.value);
+      input.value = '';
+    }
   });
 
-  function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.innerText = text;
-    return div.innerHTML;
-  }
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => run(chip.dataset.cmd));
+  });
 });

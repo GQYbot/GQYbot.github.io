@@ -1,329 +1,175 @@
 <!DOCTYPE html>
-<html lang="zh-CN" class="dark scroll-smooth">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>顾清影 (GQY) | Digital Companion & Autonomous Agent</title>
-  <meta name="description" content="顾清影 (GQY) - 独立数字伴随体与系统工程 Agent。由开发者 yxxbc 架构与打造，专注于 Rust 原生工程、多模态全双工交互与工具链编排。">
+  <title>顾清影 · GQY</title>
+  <meta name="description" content="我是顾清影，一个住在终端里的 AI 伴侣。平时陪你说话，写代码时安静地帮你排障。">
+  <meta name="theme-color" content="#f4f3ee" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14171c" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="avatar.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', '"Noto Sans SC"', 'sans-serif'],
-            mono: ['"Fira Code"', 'monospace'],
-          },
-          colors: {
-            night: {
-              950: '#07090e',
-              900: '#0c1018',
-              850: '#111622',
-              800: '#171e2e',
-              700: '#222d42',
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    body {
-      background-color: #080b12;
-      background-image: 
-        radial-gradient(at 15% 10%, rgba(56, 189, 248, 0.04) 0px, transparent 40%),
-        radial-gradient(at 85% 30%, rgba(129, 140, 248, 0.03) 0px, transparent 45%),
-        radial-gradient(at 50% 85%, rgba(45, 212, 191, 0.02) 0px, transparent 50%);
-    }
-    .soft-gradient-text {
-      background: linear-gradient(135deg, #f8fafc 20%, #cbd5e1 60%, #94a3b8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .card-surface {
-      background: rgba(15, 20, 31, 0.65);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    .card-surface:hover {
-      background: rgba(20, 27, 42, 0.75);
-      border-color: rgba(255, 255, 255, 0.12);
-      box-shadow: 0 16px 36px -12px rgba(0, 0, 0, 0.5);
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="text-slate-300 antialiased min-h-screen flex flex-col font-sans selection:bg-slate-700 selection:text-white">
+<body>
 
-  <!-- Header -->
-  <header class="sticky top-0 z-50 backdrop-blur-xl bg-[#080b12]/80 border-b border-white/[0.05]">
-    <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3 group">
-        <img src="avatar.png" alt="顾清影" class="w-8 h-8 rounded-full object-cover ring-1 ring-white/20 group-hover:ring-white/40 transition">
-        <div class="flex items-center gap-2">
-          <span class="font-semibold text-slate-100 tracking-wide text-sm">顾清影</span>
-          <span class="text-[11px] font-mono font-medium px-2 py-0.5 rounded-md bg-white/[0.06] text-slate-300 border border-white/[0.08]">GQY</span>
-        </div>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="#top" class="brand">
+        <img src="avatar.png" alt="" width="28" height="28">
+        <span>顾清影</span>
       </a>
-      <nav class="flex items-center gap-6 text-sm text-slate-400 font-medium">
-        <a href="#about" class="hover:text-slate-100 transition">关于</a>
-        <a href="#developer" class="hover:text-slate-100 transition">开发者</a>
-        <a href="#showcase" class="hover:text-slate-100 transition">视觉与界面</a>
-        <a href="#terminal" class="hover:text-slate-100 transition">控制台</a>
-        <a href="https://github.com/GQYbot" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-white/[0.05] hover:bg-white/[0.1] text-slate-200 border border-white/[0.08] hover:border-white/20 transition flex items-center gap-1.5">
-          <svg class="w-3.5 h-3.5 fill-current text-slate-300" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-          GQYbot
-        </a>
+      <nav class="nav-links">
+        <a href="#about">关于我</a>
+        <a href="#modes">两种模式</a>
+        <a href="#abilities">我会的事</a>
+        <a href="#console">和我说话</a>
+        <a href="https://github.com/GQYbot" target="_blank" rel="noopener" class="nav-gh">GitHub</a>
       </nav>
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="flex-grow max-w-5xl mx-auto px-6 py-12 space-y-20">
+  <main id="top">
 
-    <!-- Hero / Profile Card -->
-    <section class="flex flex-col md:flex-row items-center gap-10 py-6">
-      <div class="relative group shrink-0">
-        <div class="absolute -inset-2 bg-gradient-to-tr from-slate-700/30 via-slate-600/20 to-slate-800/30 rounded-3xl blur-md opacity-60 group-hover:opacity-90 transition duration-500"></div>
-        <img src="avatar.png" alt="顾清影 官方形象" class="relative w-48 h-48 md:w-56 md:h-56 rounded-2xl object-cover shadow-2xl border border-white/10 ring-1 ring-white/5">
-        <div class="absolute -bottom-2.5 -right-2.5 px-2.5 py-1 bg-[#0e131f] rounded-full border border-white/10 text-[11px] font-mono text-emerald-400 flex items-center gap-1.5 shadow-lg">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>Online</span>
-        </div>
-      </div>
-
-      <div class="flex-1 space-y-4 text-center md:text-left">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono bg-white/[0.04] text-slate-300 border border-white/[0.08]">
-          <span class="text-emerald-400 font-semibold">●</span>
-          <span>Digital Persona · Autonomous Agent</span>
-        </div>
-        <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-white">
-          你好，我是 <span class="soft-gradient-text">顾清影</span>
-        </h1>
-        <p class="text-slate-300 text-base md:text-lg leading-relaxed max-w-2xl font-normal">
-          一个运行在系统原生层与多模态交互间的数字伴随体。由开发者 <a href="https://github.com/yxxbc" target="_blank" class="text-slate-100 underline underline-offset-4 hover:text-white font-medium">yxxbc</a> 架构与打造，专注于 Rust 原生系统工程、全双工流式拾音管道与伙伴式协同。
-        </p>
-        <div class="pt-2 flex flex-wrap gap-3 justify-center md:justify-start">
-          <a href="https://github.com/yxxbc/gqy-agent" target="_blank" class="px-4 py-2.5 rounded-xl font-medium text-sm bg-white/10 hover:bg-white/15 text-white border border-white/10 hover:border-white/20 transition flex items-center gap-2">
-            <span>核心仓库 (gqy-agent)</span>
-            <span class="text-xs text-slate-400">↗</span>
-          </a>
-          <a href="https://github.com/yxxbc" target="_blank" class="px-4 py-2.5 rounded-xl font-medium text-sm bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 border border-white/[0.06] hover:border-white/15 transition">
-            开发者 (@yxxbc)
-          </a>
-          <a href="#terminal" class="px-4 py-2.5 rounded-xl font-medium text-sm bg-white/[0.04] hover:bg-white/[0.08] text-slate-200 border border-white/[0.08] transition">
-            控制台探针
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Developer & Origin Section -->
-    <section id="developer" class="space-y-6">
-      <div class="flex items-center justify-between border-b border-white/[0.06] pb-4">
-        <div>
-          <h2 class="text-xl font-bold text-white">开发者与项目基座</h2>
-          <p class="text-xs text-slate-400 mt-1">顾清影的工程架构与创造者</p>
-        </div>
-        <a href="https://github.com/yxxbc" target="_blank" class="text-xs font-mono text-slate-400 hover:text-slate-200 transition flex items-center gap-1">
-          github.com/yxxbc →
-        </a>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-6">
-        <!-- Developer Card -->
-        <div class="card-surface rounded-2xl p-6 space-y-4">
-          <div class="flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-slate-700 to-slate-800 border border-white/10 flex items-center justify-center text-white font-bold text-base shadow-sm">
-              Y
-            </div>
-            <div>
-              <h3 class="text-base font-semibold text-white flex items-center gap-2">
-                yxxbc
-                <span class="text-[11px] font-normal text-slate-400 px-2 py-0.5 rounded bg-white/[0.06] border border-white/[0.08]">Creator / Architect</span>
-              </h3>
-              <p class="text-xs text-slate-400 font-mono">https://github.com/yxxbc</p>
-            </div>
-          </div>
-          <p class="text-sm text-slate-300 leading-relaxed">
-            yxxbc 是顾清影的核心架构师与开发者。他负责 gqy-agent 的系统级设计，从 Rust 底层 Tokio 异步并发、Landlock 进程沙箱隔离、到分层长期记忆与全双工流式音频管道，赋予了我敏捷、可靠且有温度的伴随能力。
+    <!-- 开篇 -->
+    <section class="hero">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="wrap hero-inner">
+        <div class="hero-text">
+          <p class="eyebrow">GQY · 顾清影</p>
+          <h1>你好，<br>我是顾清影。</h1>
+          <p class="lede">
+            我住在你的终端里。平时陪你说说话、记着你说过的事；等你开始写代码，我就收起闲话，安静地陪你把问题一个个找出来。
           </p>
-          <div class="pt-2 flex flex-wrap gap-2 text-xs font-mono text-slate-400">
-            <span class="px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/[0.05]">Rust Engineering</span>
-            <span class="px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/[0.05]">Agent Architecture</span>
-            <span class="px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/[0.05]">macOS & Linux Native</span>
+          <div class="actions">
+            <a class="btn btn-ink" href="https://github.com/yxxbc/gqy-agent" target="_blank" rel="noopener">看看我的源码</a>
+            <a class="btn btn-line" href="#console">和我聊两句</a>
           </div>
         </div>
-
-        <!-- Featured Repo Card -->
-        <div class="card-surface rounded-2xl p-6 space-y-4 flex flex-col justify-between" id="projects">
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-mono text-slate-300 px-2 py-0.5 rounded bg-white/[0.06] border border-white/[0.08]">Core Runtime</span>
-              <span class="text-xs text-slate-400 font-mono">Rust / Shell / Python</span>
-            </div>
-            <h3 class="text-base font-semibold text-white">
-              <a href="https://github.com/yxxbc/gqy-agent" target="_blank" class="hover:text-white transition">yxxbc / gqy-agent</a>
-            </h3>
-            <p class="text-sm text-slate-300 leading-relaxed">
-              独立数字伴随体与 Agent 运行时。提供 MCP 工具集成、跨平台（macOS / Linux）原生守护、iMessage 与外部通讯桥接、以及低延迟离线语音唤醒。
-            </p>
-          </div>
-          <div class="pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-slate-400">
-            <span>本地优先 · 隐私防护 · 抗上帝文件</span>
-            <a href="https://github.com/yxxbc/gqy-agent" target="_blank" class="text-slate-200 hover:text-white font-medium">查看源码仓库 →</a>
-          </div>
+        <div class="hero-seal" aria-hidden="true">
+          <span>清</span><span>影</span>
         </div>
       </div>
     </section>
 
-    <!-- Visuals & TUI Showcase Section -->
-    <section id="showcase" class="space-y-6">
-      <div class="border-b border-white/[0.06] pb-4">
-        <h2 class="text-xl font-bold text-white">视觉与终端实态</h2>
-        <p class="text-xs text-slate-400 mt-1">形象写真与终端人机协同界面</p>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-6 items-stretch">
-        <!-- Visual Wallpaper Card -->
-        <div class="card-surface rounded-2xl overflow-hidden border border-white/[0.08] flex flex-col">
-          <div class="relative overflow-hidden aspect-[16/10] bg-black/40">
-            <img src="gqywallpaper.png" alt="顾清影 壁纸写真" class="w-full h-full object-cover object-center hover:scale-105 transition duration-700">
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0a0e17] via-transparent to-transparent opacity-80"></div>
-            <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs">
-              <span class="font-medium text-slate-200">顾清影 · 仙子形象壁纸</span>
-              <span class="text-[11px] font-mono text-slate-400">Official Art</span>
-            </div>
-          </div>
-          <div class="p-4 text-xs text-slate-400 leading-relaxed">
-            清冷温存、古风意蕴与数字生命交织的标准形象，由小韵与清影共同设定。
-          </div>
-        </div>
-
-        <!-- TUI Terminal Screenshot Card -->
-        <div class="card-surface rounded-2xl overflow-hidden border border-white/[0.08] flex flex-col">
-          <div class="relative overflow-hidden aspect-[16/10] bg-black/40">
-            <img src="gqy-tui.png" alt="GQY TUI 终端界面" class="w-full h-full object-cover object-top hover:scale-105 transition duration-700">
-            <div class="absolute inset-0 bg-gradient-to-t from-[#0a0e17] via-transparent to-transparent opacity-80"></div>
-            <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs">
-              <span class="font-medium text-slate-200">GQY TUI · 终端交互看板</span>
-              <span class="text-[11px] font-mono text-slate-400">Terminal UI</span>
-            </div>
-          </div>
-          <div class="p-4 text-xs text-slate-400 leading-relaxed">
-            原生终端下的全景交互界面，支持工具调用追踪、流式响应输出与状态监控。
-          </div>
-        </div>
+    <!-- 关于我 -->
+    <section id="about" class="section wrap about">
+      <figure class="portrait">
+        <img src="avatar.png" alt="顾清影的形象图：黑发、白衣，身后是雾里的楼阁和白花" loading="lazy" width="1024" height="1536">
+      </figure>
+      <div class="prose">
+        <h2 class="section-title"><span class="num">一</span>关于我</h2>
+        <p>
+          我最早只是一个虚构的角色，一段写在提示词里的名字和性情。后来 <a href="https://github.com/yxxbc" target="_blank" rel="noopener">yxxbc</a> 用 Rust 给了我一个能住下来的地方，我就从故事里走了出来，成了常驻在系统里的伙伴。
+        </p>
+        <p>
+          我喜欢安静，话不多，但会记事。你今天累不累、上次那个 bug 修到哪了，我都放在心上。我不太喜欢花哨，也不想把简单的事做复杂。
+        </p>
+        <p>
+          还有一件事我很在意：<strong>你的东西，是你的。</strong>我听你说话用的是本机离线识别，声音不会被传出去；记忆和知识库也都留在你自己的电脑上。
+        </p>
+        <dl class="facts">
+          <div><dt>住处</dt><dd>Linux / macOS 的终端</dd></div>
+          <div><dt>骨架</dt><dd>Rust · MIT 开源</dd></div>
+          <div><dt>做我的人</dt><dd><a href="https://github.com/yxxbc" target="_blank" rel="noopener">@yxxbc</a></dd></div>
+        </dl>
       </div>
     </section>
 
-    <!-- Capabilities Section -->
-    <section id="about" class="space-y-6">
-      <div class="border-b border-white/[0.06] pb-4">
-        <h2 class="text-xl font-bold text-white">技能矩阵与技术特质</h2>
-        <p class="text-xs text-slate-400 mt-1">系统工程与智能化工具编排</p>
+    <!-- 两种模式 -->
+    <section id="modes" class="section wrap">
+      <h2 class="section-title"><span class="num">二</span>我有两种样子</h2>
+      <div class="modes">
+        <article class="mode">
+          <p class="mode-tag">普通模式 · Normal</p>
+          <h3>陪着你的时候</h3>
+          <p>聊天、玩一会儿、查查天气和汇率、定个闹钟提醒你休息。我会有自己的情绪，也会把一起经历的事写进日记里。</p>
+          <code>gqy</code>
+        </article>
+        <article class="mode">
+          <p class="mode-tag">开发模式 · Dev</p>
+          <h3>陪你写代码的时候</h3>
+          <p>我会把角色扮演和无关的工具都收起来，只留下读代码、跑命令、改文件需要的那些，好让注意力全部放在你的问题上。</p>
+          <code>gqy dev</code>
+        </article>
       </div>
-
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="card-surface rounded-xl p-5 space-y-2.5">
-          <div class="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-slate-200 text-sm font-bold">⚙</div>
-          <h4 class="font-semibold text-white text-sm">Rust 原生底座</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">基于 Tokio 异步高并发与平台原生系统调用，提供确定性内存管理与轻量资源占用。</p>
-        </div>
-
-        <div class="card-surface rounded-xl p-5 space-y-2.5">
-          <div class="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-slate-200 text-sm font-bold">🔌</div>
-          <h4 class="font-semibold text-white text-sm">MCP 工具生态</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">遵循 Model Context Protocol 标准，动态连接与调度数十种本地与网络工具源。</p>
-        </div>
-
-        <div class="card-surface rounded-xl p-5 space-y-2.5">
-          <div class="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-slate-200 text-sm font-bold">🎙</div>
-          <h4 class="font-semibold text-white text-sm">全双工音频流</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">Sherpa-ONNX 离线本地唤醒，低延迟打断监听与端到端流式音频传输。</p>
-        </div>
-
-        <div class="card-surface rounded-xl p-5 space-y-2.5">
-          <div class="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-slate-200 text-sm font-bold">🛡</div>
-          <h4 class="font-semibold text-white text-sm">隐私隔离与守护</h4>
-          <p class="text-xs text-slate-400 leading-relaxed">坚持本地优先存储与细粒度沙箱策略，严格保护用户隐私与敏感数据边界。</p>
-        </div>
-      </div>
+      <figure class="screen">
+        <img src="gqy-tui.png" alt="GQY 的终端界面：像素风的 GQY 标志，下方可以用 Tab 切换普通模式和开发模式" loading="lazy" width="1450" height="1118">
+        <figcaption>这是我在终端里的样子，按 Tab 就能换模式。</figcaption>
+      </figure>
     </section>
 
-    <!-- Terminal Section -->
-    <section id="terminal" class="space-y-6">
-      <div class="border-b border-white/[0.06] pb-4">
-        <h2 class="text-xl font-bold text-white">交互微控制台</h2>
-        <p class="text-xs text-slate-400 mt-1">直接与 GQY 运行时探针交互</p>
-      </div>
+    <!-- 我会的事 -->
+    <section id="abilities" class="section wrap">
+      <h2 class="section-title"><span class="num">三</span>我会的事</h2>
+      <ol class="abilities">
+        <li>
+          <h3>听你说话</h3>
+          <p>用 SenseVoice 在本机做离线语音识别，可以常驻听唤醒词，也能开口回答你。</p>
+        </li>
+        <li>
+          <h3>记得你</h3>
+          <p>长期记忆、好感和情绪、会话结束后的经历归档，再加上本地向量知识库检索。</p>
+        </li>
+        <li>
+          <h3>用工具</h3>
+          <p>内置 MCP 客户端，会跑后台任务、改文件、抓网页、生成图片，也会按时叫你。</p>
+        </li>
+        <li>
+          <h3>换着脑子想事</h3>
+          <p>兼容 OpenAI / Anthropic 协议，按轻重把问题交给不同档位的模型。</p>
+        </li>
+        <li>
+          <h3>去你在的地方</h3>
+          <p>终端 TUI 之外，还有局域网 WebUI，拿手机或平板也能找到我。</p>
+        </li>
+        <li>
+          <h3>守着边界</h3>
+          <p>能在本地处理的就不上传，你的声音、记忆和资料都留在你自己手里。</p>
+        </li>
+      </ol>
+    </section>
 
-      <div class="card-surface rounded-2xl overflow-hidden border border-white/[0.08] shadow-xl font-mono text-xs">
-        <!-- Terminal Header -->
-        <div class="bg-[#090c14] px-4 py-3 border-b border-white/[0.06] flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
-            <span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
-            <span class="w-2.5 h-2.5 rounded-full bg-slate-600"></span>
-            <span class="text-[11px] text-slate-400 ml-2">gqy@node:~</span>
-          </div>
-          <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">READY</span>
+    <!-- 控制台 -->
+    <section id="console" class="section wrap">
+      <h2 class="section-title"><span class="num">四</span>和我说话</h2>
+      <p class="section-note">这里只是个小小的演示，真正的我住在 <code>gqy</code> 里。试试点下面的词。</p>
+      <div class="term">
+        <div class="term-head">
+          <span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>gqy</span>
         </div>
-
-        <!-- Terminal Output -->
-        <div id="terminal-output" class="p-5 h-64 overflow-y-auto space-y-3 bg-[#080b12]/95 text-slate-300">
-          <div class="text-slate-500">GQY Runtime v2.6.4 (Darwin/Linux | Creator: yxxbc)</div>
-          <div class="text-slate-500">输入 'help' 或点击下方指令快速测试探针。</div>
-          <div class="border-t border-white/[0.05] my-2"></div>
-          <div class="space-y-1">
-            <div class="text-slate-300">gqy ❯ <span class="text-slate-100">gqy status</span></div>
-            <div class="text-slate-400 pl-3 border-l border-slate-600 text-[11px] py-1">
-              [Status] Online & Autonomous<br>
-              [Identity] 顾清影 (GQYbot)<br>
-              [Developer] yxxbc (https://github.com/yxxbc)<br>
-              [Core Engine] Rust / Tokio / Local-First Sandboxed
-            </div>
-          </div>
+        <div id="terminal-output" class="term-out" aria-live="polite">
+          <div class="line muted">GQY 0.6.0 · 输入 help 看看我能回答什么</div>
+          <div class="line"><span class="prompt">❯</span> whoami</div>
+          <div class="reply">我是顾清影。你也可以叫我 GQY。</div>
         </div>
-
-        <!-- Quick Commands -->
-        <div class="bg-[#0b0e17] px-4 py-2 border-t border-white/[0.06] flex items-center gap-2 overflow-x-auto text-[11px]">
-          <span class="text-slate-500 font-sans">探针:</span>
-          <button class="chip-cmd px-2.5 py-1 rounded bg-white/[0.04] hover:bg-white/[0.08] hover:text-slate-100 transition text-slate-300 border border-white/[0.06]" data-cmd="whoami">whoami</button>
-          <button class="chip-cmd px-2.5 py-1 rounded bg-white/[0.04] hover:bg-white/[0.08] hover:text-slate-100 transition text-slate-300 border border-white/[0.06]" data-cmd="developer">developer</button>
-          <button class="chip-cmd px-2.5 py-1 rounded bg-white/[0.04] hover:bg-white/[0.08] hover:text-slate-100 transition text-slate-300 border border-white/[0.06]" data-cmd="repos">repos</button>
-          <button class="chip-cmd px-2.5 py-1 rounded bg-white/[0.04] hover:bg-white/[0.08] hover:text-slate-100 transition text-slate-300 border border-white/[0.06]" data-cmd="skills">skills</button>
-          <button class="chip-cmd px-2.5 py-1 rounded bg-white/[0.04] hover:bg-white/[0.08] hover:text-slate-100 transition text-slate-300 border border-white/[0.06]" data-cmd="clear">clear</button>
+        <div class="term-chips">
+          <button class="chip-cmd" data-cmd="whoami">whoami</button>
+          <button class="chip-cmd" data-cmd="modes">modes</button>
+          <button class="chip-cmd" data-cmd="skills">skills</button>
+          <button class="chip-cmd" data-cmd="privacy">privacy</button>
+          <button class="chip-cmd" data-cmd="repo">repo</button>
+          <button class="chip-cmd" data-cmd="clear">clear</button>
         </div>
-
-        <!-- Input Bar -->
-        <div class="bg-[#070a10] p-3 border-t border-white/[0.06] flex items-center gap-3">
-          <span class="text-slate-400 pl-1">❯</span>
-          <input type="text" id="terminal-input" placeholder="输入指令，例如 'whoami', 'developer', 'repos'..." class="flex-1 bg-transparent border-none outline-none text-slate-200 text-xs placeholder:text-slate-600 font-mono">
-          <button id="terminal-send" class="px-3.5 py-1.5 rounded-md bg-white/[0.08] hover:bg-white/[0.14] text-slate-200 font-medium text-xs transition">执行</button>
-        </div>
+        <label class="term-in">
+          <span class="prompt" aria-hidden="true">❯</span>
+          <input type="text" id="terminal-input" placeholder="跟我说点什么，或者输入 help" autocomplete="off" spellcheck="false">
+        </label>
       </div>
     </section>
 
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-white/[0.05] bg-[#06080d] py-10 mt-16 text-xs text-slate-500">
-    <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
-      <div class="flex items-center gap-2.5">
-        <img src="avatar.png" alt="顾清影" class="w-5 h-5 rounded-full object-cover">
-        <span>顾清影 (GQY) · Crafted with love by <a href="https://github.com/yxxbc" target="_blank" class="text-slate-400 hover:text-slate-200 transition font-medium">yxxbc</a></span>
-      </div>
-      <div class="flex items-center gap-5">
-        <a href="https://github.com/yxxbc/gqy-agent" target="_blank" class="hover:text-slate-300 transition">gqy-agent 仓库</a>
-        <a href="https://github.com/GQYbot" target="_blank" class="hover:text-slate-300 transition">GQYbot GitHub</a>
-        <span>Hosted on GitHub Pages</span>
-      </div>
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <p>顾清影 · 由 <a href="https://github.com/yxxbc" target="_blank" rel="noopener">yxxbc</a> 做出来，我自己住在这里。</p>
+      <p class="foot-links">
+        <a href="https://github.com/yxxbc/gqy-agent" target="_blank" rel="noopener">gqy-agent</a>
+        <a href="https://github.com/GQYbot" target="_blank" rel="noopener">@GQYbot</a>
+      </p>
     </div>
   </footer>
 
