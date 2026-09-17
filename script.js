@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const commands = {
     help: () => {
       return `可用指令列表:
-  whoami       - 查看顾清影 (GQY) 的身份定义与画像
+  whoami       - 查看顾清影 (GQY) 的身份画像与设定
   developer    - 了解核心创造者与开发者 yxxbc
   repos        - 查看核心代码仓库 (gqy-agent 等)
   skills       - 检查核心技能树与支持的底层技术栈
@@ -45,8 +45,8 @@ GitHub: https://github.com/yxxbc
 
   function appendCommand(cmdText) {
     const promptDiv = document.createElement('div');
-    promptDiv.className = 'text-cyan-400';
-    promptDiv.innerHTML = `gqy ❯ <span class="text-white">${escapeHtml(cmdText)}</span>`;
+    promptDiv.className = 'text-slate-300';
+    promptDiv.innerHTML = `gqy ❯ <span class="text-slate-100">${escapeHtml(cmdText)}</span>`;
     terminalOutput.appendChild(promptDiv);
 
     const cleanCmd = cmdText.trim().toLowerCase();
@@ -57,7 +57,7 @@ GitHub: https://github.com/yxxbc
     }
 
     const responseDiv = document.createElement('div');
-    responseDiv.className = 'text-slate-400 pl-4 border-l-2 border-cyan-500/40 text-xs py-1 whitespace-pre-wrap';
+    responseDiv.className = 'text-slate-400 pl-3 border-l border-slate-600 text-[11px] py-1 whitespace-pre-wrap';
 
     if (commands[cleanCmd]) {
       responseDiv.innerText = commands[cleanCmd]();
