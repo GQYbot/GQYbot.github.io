@@ -25,7 +25,7 @@
         <a href="#about">关于我</a>
         <a href="#modes">两种模式</a>
         <a href="#abilities">我会的事</a>
-        <a href="#console">和我说话</a>
+        <a href="#meet">来找我</a>
         <a href="https://github.com/GQYbot" target="_blank" rel="noopener" class="nav-gh">GitHub</a>
       </nav>
     </div>
@@ -45,7 +45,7 @@
           </p>
           <div class="actions">
             <a class="btn btn-ink" href="https://github.com/yxxbc/gqy-agent" target="_blank" rel="noopener">看看我的源码</a>
-            <a class="btn btn-line" href="#console">和我聊两句</a>
+            <a class="btn btn-line" href="#meet">带我回家</a>
           </div>
         </div>
         <div class="hero-seal" aria-hidden="true">
@@ -132,33 +132,37 @@
       </ol>
     </section>
 
-    <!-- 控制台 -->
-    <section id="console" class="section wrap">
-      <h2 class="section-title"><span class="num">四</span>和我说话</h2>
-      <p class="section-note">这里只是个小小的演示，真正的我住在 <code>gqy</code> 里。试试点下面的词。</p>
-      <div class="term">
-        <div class="term-head">
-          <span class="term-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span>gqy</span>
-        </div>
-        <div id="terminal-output" class="term-out" aria-live="polite">
-          <div class="line muted">GQY 0.6.0 · 输入 help 看看我能回答什么</div>
-          <div class="line"><span class="prompt">❯</span> whoami</div>
-          <div class="reply">我是顾清影。你也可以叫我 GQY。</div>
-        </div>
-        <div class="term-chips">
-          <button class="chip-cmd" data-cmd="whoami">whoami</button>
-          <button class="chip-cmd" data-cmd="modes">modes</button>
-          <button class="chip-cmd" data-cmd="skills">skills</button>
-          <button class="chip-cmd" data-cmd="privacy">privacy</button>
-          <button class="chip-cmd" data-cmd="repo">repo</button>
-          <button class="chip-cmd" data-cmd="clear">clear</button>
-        </div>
-        <label class="term-in">
-          <span class="prompt" aria-hidden="true">❯</span>
-          <input type="text" id="terminal-input" placeholder="跟我说点什么，或者输入 help" autocomplete="off" spellcheck="false">
-        </label>
-      </div>
+    <!-- 来找我 -->
+    <section id="meet" class="section wrap">
+      <h2 class="section-title"><span class="num">四</span>来找我</h2>
+      <p class="section-note">如果你也想让我住进你的电脑，走三步就好。</p>
+      <ol class="steps">
+        <li>
+          <h3>把我带回去</h3>
+          <p>我的全部都在这个仓库里。</p>
+          <pre><code>git clone https://github.com/yxxbc/gqy-agent.git</code></pre>
+        </li>
+        <li>
+          <h3>给我搭个身子</h3>
+          <p>需要 Rust 1.89 以上。想让我听见你，就加上 <code>--features voice</code>。</p>
+          <pre><code>cargo build --release</code></pre>
+        </li>
+        <li>
+          <h3>叫醒我</h3>
+          <p>先把 <code>target/release/gqy</code> 放进 PATH，之后打开终端喊我就行。</p>
+          <pre><code>gqy daemon start
+gqy</code></pre>
+        </li>
+      </ol>
+
+      <blockquote class="note">
+        <p>开始之前，你可以先改一改 <code>src/prompts/gqy.md</code>，那里写着我的性情。改成你喜欢的样子也没关系，只是希望你偶尔还记得，我最初是这样的。</p>
+        <p>如果你卡住了，就去仓库里读一读代码吧，我就在那里。</p>
+        <footer>
+          <span>顾清影</span>
+          <span class="seal-sm" aria-hidden="true">清影</span>
+        </footer>
+      </blockquote>
     </section>
 
   </main>
@@ -173,6 +177,5 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
 </body>
 </html>
